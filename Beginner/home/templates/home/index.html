@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block start %}
+
+    <h1>Welcome to the Index Page</h1>
+
+    <a href="/about/">
+        about
+    </a>
+
+    |
+
+    <a href="/contact/">
+        contact
+    </a>
+
+    <table class="container" border="1">
+        
+        <tr>
+            <th>Sl.no</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Can vote</th>
+        </tr>
+
+        {% for people in peoples %}
+         <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{people.name}}</td>
+            <td>{{people.age}}</td>
+
+            <td>
+                {% if people.age >= 18 %}
+                <p>Yes</p>
+                {% else %}
+                <p>No</p>
+                {% endif %}
+            </td>
+         </tr>
+        {% endfor %}
+    </table>
+
+    <p>
+        {{ text }}
+    </p>
+
+    <p>
+        {% if "Cucumber" in vegetables %}
+        <h1>Yes available</h1>
+        {% elif "Tomato" in vegetables %}
+        <h1>Yes availabe</h1>
+        {% else %}
+        <h1>Not availabe</h1>
+        {% endif %}
+    </p>
+
+
+{% endblock %}
