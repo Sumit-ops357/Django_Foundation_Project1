@@ -6,6 +6,15 @@
       {% csrf_token %}
       <h2>Login Page</h2>
 
+      {% if messages %}
+        {{ message.tags }}
+        <div class="alert theme-primary" role="alert">
+          {% for message in messages %}
+            <p>{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
       <form>
         <div class="mb-3">
           <label for="exampleInputEmail1" class="form-label">Username</label>
@@ -21,7 +30,9 @@
           <label for="exampleCheck1">Check me out</label>
         </div>
 
-        <p>Don't have an account? <a href="/register/">Register</a></p>
+        <p>
+          Don't have an account? <a href="/register/">Register</a>
+        </p>
 
         <button type="submit" class="btn-solid theme-primary">Submit</button>
       </form>

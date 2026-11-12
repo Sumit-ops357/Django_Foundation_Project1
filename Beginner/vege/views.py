@@ -2,7 +2,10 @@ from django.shortcuts import render, redirect
 from vege.models import *
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
+@login_required(login_url='/login/')
 # Create your views here.
 def recipes(request):
     if request.method == "POST":
@@ -29,12 +32,14 @@ def recipes(request):
     return render(request, 'recipes.html', context)
 
 
+@login_required(login_url='/login/')
 def delete_recipe(request, recipe_id):
 
     queryset = Recipe.objects.get(id=recipe_id)
     queryset.delete()
     return redirect('/recipes/')    
 
+@login_required(login_url='/login/')
 def update_recipe(request, recipe_id):
     queryset = Recipe.objects.get(id=recipe_id)
 
@@ -59,7 +64,33 @@ def update_recipe(request, recipe_id):
     return render(request, 'update_recipe.html', context)    
 
 def login_page(request):
+    
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        if not User.objects.filter(username=username).exists():
+            messages.info(request, "Username does not exist")
+            return redirect('/login/')
+
+        user = authenticate(username=username, password=password)
+
+        if user is None:
+            messages.info(request, "Incorrect password")
+            return redirect('/login/')
+
+        else:
+            # Creating a session for the user
+            login(request, user)
+            return redirect('/recipes/')        
+
     return render(request, 'login.html')    
+
+
+def logout_page(request):
+    logout(request)
+
+    return redirect('/login/')
 
 def register_page(request):
     
