@@ -37,6 +37,103 @@ A beginner-friendly Django project that demonstrates basic pages, templates, dat
 
 The current codebase demonstrates the fundamentals from the early lessons and the recipe project. Authentication is the next area to integrate into the application.
 
+## ORM Part 1
+
+The following Django ORM operations were performed from the Django shell:
+
+```powershell
+PS D:\Django_Learning_Youtube\Beginner> python manage.py makemigrations
+Migrations for 'vege':
+  vege\migrations\0003_recipe_recipe_view_count.py
+    + Add field recipe_view_count to recipe
+PS D:\Django_Learning_Youtube\Beginner> python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, home, sessions, vege
+Running migrations:
+  Applying vege.0003_recipe_recipe_view_count... OK
+PS D:\Django_Learning_Youtube\Beginner> python manage.py shell
+15 objects imported automatically (use -v 2 for details).
+
+Python 3.13.17 (tags/v3.13.17:64e080d, Oct 21 2026, 14:08:53) [MSC v.1944 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> vege = Recipe.objects.all()
+>>> vege
+<QuerySet [<Recipe: Recipe object (2)>, <Recipe: Recipe object (4)>, <Recipe: Recipe object (7)>]>
+>>> vege[0] 
+<Recipe: Recipe object (2)>
+>>> vege[0].recipe_name
+"Paneer Biryani Recipe (Bhayi's Favourite Dish)"
+>>> vege[0].recipe_view_count
+1
+>>> vege[0].recipe_description
+'Chef:-  Sneha from Dandeli\r\n\r\nPaneer Biryani is a traditional, dum-cooked vegetarian biryani made by layering yogurt-marinated paneer with par-cooked basmati rice, fried onions (birista), herbs, saffron milk and ghee. Mildly spiced and delicately flavored, it’s a hearty one-pot dish that pairs perfectly with raita. Though it takes time to prepare, the result is always worth it – flavorful, filling, and simply irresistible. Cook it on the stovetop or in the oven.'
+>>> import random
+>>> for veg in vege:
+...     veg.recipe_view_count=random.randit(10,100)
+... vege[0].recipe_view_count
+  File "<console>", line 3
+    vege[0].recipe_view_count
+    ^^^^
+SyntaxError: invalid syntax
+>>> vege
+<QuerySet [<Recipe: Recipe object (2)>, <Recipe: Recipe object (4)>, <Recipe: Recipe object (7)>]>
+>>> vege[0] 
+<Recipe: Recipe object (2)>
+>>> vege[0].recipe_name
+"Paneer Biryani Recipe (Bhayi's Favourite Dish)"
+>>> vege[0].recipe_view_count
+1
+>>> vege[1].recipe_view_count
+1
+>>> for veg in vege:
+...     veg.recipe_view_count = random.randit(10,100)
+...     veg.save()
+... 
+Traceback (most recent call last):
+  File "<console>", line 2, in <module>
+AttributeError: module 'random' has no attribute 'randit'. Did you mean: 'randint'?
+>>> vege[0].recipe_view_count
+1
+>>> vege[1].recipe_view_count
+1
+>>> for veg in vege:
+...     veg.recipe_view_count = random.randint(10,100)
+...     veg.save()
+... 
+>>> vege[0].recipe_view_count
+89
+>>> vege[1].recipe_view_count
+79
+>>> vege[2].recipe_view_count
+43
+>>> vege = Recipe.objects.all().order_by('recipe_view_count')
+>>> vege
+<QuerySet [<Recipe: Recipe object (7)>, <Recipe: Recipe object (4)>, <Recipe: Recipe object (2)>]>
+>>> vege = Recipe.objects.all().order_by('-recipe_view_count')
+>>> vege
+<QuerySet [<Recipe: Recipe object (2)>, <Recipe: Recipe object (4)>, <Recipe: Recipe object (7)>]>
+>>> vege = Recipe.objects.all().order_by('-recipe_view_count')[0:1]
+>>> vege
+<QuerySet [<Recipe: Recipe object (2)>]>
+>>> vege = Recipe.objects.all().order_by('-recipe_view_count')[0:2]
+>>> vege
+<QuerySet [<Recipe: Recipe object (2)>, <Recipe: Recipe object (4)>]>
+>>> Recipe.objects.filter(recipe_view_count__gte = 50)
+<QuerySet [<Recipe: Recipe object (2)>, <Recipe: Recipe object (4)>]>
+>>> Recipe.objects.filter(recipe_view_count__gte = 50)[0]
+<Recipe: Recipe object (2)>
+>>> Recipe.objects.filter(recipe_view_count__gte = 50)[0].recipe_view_count
+89
+>>> Recipe.objects.filter(recipe_view_count__gte = 50)[1].recipe_view_count
+79
+>>> Recipe.objects.filter(recipe_view_count__lte = 50)
+<QuerySet [<Recipe: Recipe object (7)>]>
+>>> Recipe.objects.filter(recipe_view_count__lte = 50)[0].recipe_view_count
+43
+>>>
+```
+
 ## Project Structure
 
 ```text
