@@ -134,6 +134,87 @@ AttributeError: module 'random' has no attribute 'randit'. Did you mean: 'randin
 >>>
 ```
 
+## ORM (Advanced Queries) Part 3
+
+These queries were performed in the Django shell.
+
+### Query 1: Retrieving student names starting with specific letters
+
+```pycon
+>>> from vege.models import *
+>>> queryset = Student.objects.filter(student_name__startswith = "su")
+>>> queryset
+<QuerySet [<Student: Sumit Rathod>]>
+>>> queryset = Student.objects.filter(student_name__startswith = "s")
+>>> queryset
+<QuerySet [<Student: Stephanie Jones>, <Student: Sumit Rathod>]>
+>>> queryset = Student.objects.filter(student_name__startswith = "a")
+>>> queryset
+<QuerySet [<Student: Amy Curry>, <Student: Ashley Douglas>]>
+>>>
+```
+
+### Query 2: Retrieving student emails ending with specific domains
+
+```pycon
+>>> queryset = Student.objects.filter(student_email__endswith = ".org")
+>>> queryset
+<QuerySet [<Student: Barbara Torres>, <Student: Bridget Riley>, <Student: Chris Burns>, <Student: James Tucker>, <Student: Mallory Stephens>, <Student: Randy Schaefer>, <Student: Richard Mitchell>, <Student: Tammy Brooks>]>
+>>> queryset = Student.objects.filter(student_email__endswith = ".com")
+>>> queryset
+<QuerySet [<Student: Amy Curry>, <Student: Colleen Chavez>, <Student: Heather Gonzalez>, <Student: Jacob Ingram>, <Student: Justin Ibarra>, <Student: Robert Brown>, <Student: Robert Foster>, <Student: Robert Larson>, <Student: Stephanie Jones>, <Student: Sumit Rathod>, <Student: Tom Walls>, <Student: Zachary Thomas>]>
+>>>
+```
+
+### Query 3: Retrieving student names containing a substring
+
+```pycon
+>>> queryset = Student.objects.filter(student_name__icontains = "an")
+>>> queryset
+<QuerySet [<Student: Christian Conley>, <Student: Daniel Stone>, <Student: Emily Daniels>, <Student: Randy Schaefer>, <Student: Stephanie Jones>]>
+>>> queryset = Student.objects.filter(student_name__icontains = "um")
+>>> queryset
+<QuerySet [<Student: Sumit Rathod>]>
+>>>
+```
+
+### Query 4: Retrieving student names from a department
+
+The foreign key relationship between `Student` and `Department` is used here.
+
+```pycon
+>>> queryset = Student.objects.filter(department__department = "Civil")
+>>> queryset
+<QuerySet [<Student: Amy Curry>, <Student: Ashley Douglas>, <Student: Pamela Schneider>, <Student: Raymond Brown>]>
+>>> queryset = Student.objects.filter(department__department = "Computer Science")
+>>> queryset
+<QuerySet [<Student: Christian Conley>, <Student: Colleen Chavez>, <Student: Daniel Stone>, <Student: Emily Daniels>, <Student: Heather Gonzalez>, <Student: Robert Brown>, <Student: Robert Foster>, <Student: Sumit Rathod>]>
+>>>
+```
+
+### Query 5: Retrieving students belonging to Civil or Electrical
+
+```pycon
+>>> d = ["Civil", "Electrical"]
+>>> d
+['Civil', 'Electrical']
+>>> queryset = Student.objects.filter(department__department__in = d)
+>>> queryset
+<QuerySet [<Student: Amy Curry>, <Student: Ashley Douglas>, <Student: Bridget Riley>, <Student: Chris Burns>, <Student: James Tucker>, <Student: Jeff Frey>, <Student: Justin Ibarra>, <Student: Michael Wilson>, <Student: Oscar Terrell>, <Student: Pamela Schneider>, <Student: Randy Schaefer>, <Student: Raymond Brown>, <Student: Richard Mitchell>, <Student: Stephanie Jones>, <Student: Tammy Brooks>, <Student: Zachary Thomas>]>
+>>>
+```
+
+### Query 6: Retrieving students from all departments except Civil
+
+```pycon
+>>> queryset = Student.objects.exclude(department__department = "Civil")
+>>> queryset
+<QuerySet [<Student: Barbara Torres>, <Student: Bridget Riley>, <Student: Chris Burns>, <Student: Christian Conley>, <Student: Colleen Chavez>, <Student: Daniel Stone>, <Student: Emily Daniels>, <Student: Heather Gonzalez>, <Student: Jacob Ingram>, <Student: James Tucker>, <Student: Jeff Frey>, <Student: Justin Ibarra>, <Student: Mallory Stephens>, <Student: Michael Wilson>, <Student: Michaela Hall>, <Student: Oscar Terrell>, <Student: Randy Schaefer>, <Student: Richard Mitchell>, <Student: Robert Brown>, <Student: Robert Foster>, '...(remaining elements truncated)...']>
+>>> queryset.count()
+27
+>>>
+```
+
 ## Project Structure
 
 ```text
