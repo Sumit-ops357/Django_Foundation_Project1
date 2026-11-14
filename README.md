@@ -39,7 +39,9 @@ The current codebase demonstrates the fundamentals from the early lessons and th
 
 ## ORM Part 1
 
-The following Django ORM operations were performed from the Django shell:
+These queries were performed in the Django shell.
+
+### Setup: Applying migrations and opening the Django shell
 
 ```powershell
 PS D:\Django_Learning_Youtube\Beginner> python manage.py makemigrations
@@ -57,6 +59,11 @@ PS D:\Django_Learning_Youtube\Beginner> python manage.py shell
 Python 3.13.17 (tags/v3.13.17:64e080d, Oct 21 2026, 14:08:53) [MSC v.1944 64 bit (AMD64)] on win32
 Type "help", "copyright", "credits" or "license" for more information.
 (InteractiveConsole)
+```
+
+### Query 1: Retrieving all recipes and recipe details
+
+```pycon
 >>> vege = Recipe.objects.all()
 >>> vege
 <QuerySet [<Recipe: Recipe object (2)>, <Recipe: Recipe object (4)>, <Recipe: Recipe object (7)>]>
@@ -68,6 +75,11 @@ Type "help", "copyright", "credits" or "license" for more information.
 1
 >>> vege[0].recipe_description
 'Chef:-  Sneha from Dandeli\r\n\r\nPaneer Biryani is a traditional, dum-cooked vegetarian biryani made by layering yogurt-marinated paneer with par-cooked basmati rice, fried onions (birista), herbs, saffron milk and ghee. Mildly spiced and delicately flavored, it’s a hearty one-pot dish that pairs perfectly with raita. Though it takes time to prepare, the result is always worth it – flavorful, filling, and simply irresistible. Cook it on the stovetop or in the oven.'
+```
+
+### Query 2: Updating recipe view counts
+
+```pycon
 >>> import random
 >>> for veg in vege:
 ...     veg.recipe_view_count=random.randit(10,100)
@@ -86,6 +98,11 @@ SyntaxError: invalid syntax
 1
 >>> vege[1].recipe_view_count
 1
+```
+
+The first attempt uses the misspelled `random.randit` method and raises an error. The corrected query uses `random.randint`.
+
+```pycon
 >>> for veg in vege:
 ...     veg.recipe_view_count = random.randit(10,100)
 ...     veg.save()
@@ -107,18 +124,33 @@ AttributeError: module 'random' has no attribute 'randit'. Did you mean: 'randin
 79
 >>> vege[2].recipe_view_count
 43
+```
+
+### Query 3: Ordering recipes by view count
+
+```pycon
 >>> vege = Recipe.objects.all().order_by('recipe_view_count')
 >>> vege
 <QuerySet [<Recipe: Recipe object (7)>, <Recipe: Recipe object (4)>, <Recipe: Recipe object (2)>]>
 >>> vege = Recipe.objects.all().order_by('-recipe_view_count')
 >>> vege
 <QuerySet [<Recipe: Recipe object (2)>, <Recipe: Recipe object (4)>, <Recipe: Recipe object (7)>]>
+```
+
+### Query 4: Retrieving the most-viewed recipes
+
+```pycon
 >>> vege = Recipe.objects.all().order_by('-recipe_view_count')[0:1]
 >>> vege
 <QuerySet [<Recipe: Recipe object (2)>]>
 >>> vege = Recipe.objects.all().order_by('-recipe_view_count')[0:2]
 >>> vege
 <QuerySet [<Recipe: Recipe object (2)>, <Recipe: Recipe object (4)>]>
+```
+
+### Query 5: Filtering recipes by view count
+
+```pycon
 >>> Recipe.objects.filter(recipe_view_count__gte = 50)
 <QuerySet [<Recipe: Recipe object (2)>, <Recipe: Recipe object (4)>]>
 >>> Recipe.objects.filter(recipe_view_count__gte = 50)[0]
