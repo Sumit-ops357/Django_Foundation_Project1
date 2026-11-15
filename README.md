@@ -247,6 +247,73 @@ The foreign key relationship between `Student` and `Department` is used here.
 >>>
 ```
 
+## Annotation and Aggregation Queries in Django (ORM Part 4)
+
+These queries were performed in the Django shell.
+
+### Definitions
+
+- **Aggregation:** Aggregation is performed on columns and includes functions such as `Max`, `Min`, `Avg`, and `Sum`.
+- **Annotation:** Annotation is performed on multiple columns; it can perform multiple aggregation functions.
+
+### Query 1: Average age of students
+
+```pycon
+>>> from django.db.models import *
+>>> from vege.models import *
+>>> Student.objects.aggregate(Avg('student_age'))
+{'student_age__avg': 25.35483870967742}
+```
+
+### Query 2: Maximum age of students
+
+```pycon
+>>> Student.objects.aggregate(Max('student_age'))
+{'student_age__max': 30}
+```
+
+### Query 3: Minimum age of students
+
+```pycon
+>>> Student.objects.aggregate(Min('student_age'))
+{'student_age__min': 18}
+```
+
+### Query 4: Sum of ages of students
+
+```pycon
+>>> Student.objects.aggregate(Sum('student_age'))
+{'student_age__sum': 786}
+>>>
+```
+
+### Query 5: Counting students in each age group
+
+```pycon
+>>> student = Student.objects.values('student_age').annotate(Count('student_age'))
+>>> student
+<QuerySet [{'student_age': 18, 'student_age__count': 1}, {'student_age': 20, 'student_age__count': 2}, {'student_age': 21, 'student_age__count': 1}, {'student_age': 22, 'student_age__count': 4}, {'student_age': 23, 'student_age__count': 3}, {'student_age': 24, 'student_age__count': 2}, {'student_age': 25, 'student_age__count': 3}, {'student_age': 26, 'student_age__count': 1}, {'student_age': 27, 'student_age__count': 2}, {'student_age': 28, 'student_age__count': 5}, {'student_age': 29, 'student_age__count': 3}, {'student_age': 30, 'student_age__count': 4}]>
+>>>
+```
+
+### Query 6: Counting students in each department
+
+```pycon
+>>> student = Student.objects.values('department').annotate(Count('department'))
+>>> student
+<QuerySet [{'department': 1, 'department__count': 8}, {'department': 2, 'department__count': 12}, {'department': 3, 'department__count': 4}, {'department': 4, 'department__count': 4}, {'department': 5, 'department__count': 3}]>
+>>>
+```
+
+### Query 7: Counting students by department and age
+
+```pycon
+>>> student = Student.objects.values('department', 'student_age').annotate(Count('department'), Count('student_age'))
+>>> student
+<QuerySet [{'department': 1, 'student_age': 18, 'department__count': 1, 'student_age__count': 1}, {'department': 1, 'student_age': 22, 'department__count': 1, 'student_age__count': 1}, {'department': 1, 'student_age': 25, 'department__count': 1, 'student_age__count': 1}, {'department': 1, 'student_age': 27, 'department__count': 1, 'student_age__count': 1}, {'department': 1, 'student_age': 28, 'department__count': 1, 'student_age__count': 1}, {'department': 1, 'student_age': 29, 'department__count': 2, 'student_age__count': 2}, {'department': 1, 'student_age': 30, 'department__count': 1, 'student_age__count': 1}, {'department': 2, 'student_age': 20, 'department__count': 1, 'student_age__count': 1}, {'department': 2, 'student_age': 21, 'department__count': 1, 'student_age__count': 1}, {'department': 2, 'student_age': 22, 'department__count': 2, 'student_age__count': 2}, {'department': 2, 'student_age': 23, 'department__count': 1, 'student_age__count': 1}, {'department': 2, 'student_age': 24, 'department__count': 1, 'student_age__count': 1}, {'department': 2, 'student_age': 25, 'department__count': 2, 'student_age__count': 2}, {'department': 2, 'student_age': 28, 'department__count': 3, 'student_age__count': 3}, {'department': 2, 'student_age': 30, 'department__count': 1, 'student_age__count': 1}, {'department': 3, 'student_age': 23, 'department__count': 1, 'student_age__count': 1}, {'department': 3, 'student_age': 26, 'department__count': 1, 'student_age__count': 1}, {'department': 3, 'student_age': 28, 'department__count': 1, 'student_age__count': 1}, {'department': 3, 'student_age': 29, 'department__count': 1, 'student_age__count': 1}, {'department': 4, 'student_age': 22, 'department__count': 1, 'student_age__count': 1}, '...(remaining elements truncated)...']>
+>>>
+```
+
 ## Project Structure
 
 ```text
