@@ -6,6 +6,25 @@ from .models import *
 
 # Creating fake data 
 
+def create_subject_marks() -> None:
+
+    try:
+        student_objs = Student.objects.all()
+
+        for student in student_objs:
+            subject_objs = Subject.objects.all()
+
+            for subject in subject_objs:
+
+                SubjectMarks.objects.create(
+                    student=student,
+                    subject=subject,
+                    marks=random.randint(0, 100)
+                )
+        
+    except Exception as e:
+        print("Error while creating subject marks:", e)    
+
 # This function will return nothing similar to void in C++
 def seed_db(n=10) -> None:
     
