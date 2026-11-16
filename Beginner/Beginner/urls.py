@@ -20,6 +20,7 @@ urlpatterns = [
     path('contact/',contact, name='contact'),
     path('admin/', admin.site.urls),
     path('students/', get_students, name='get_students'),
+    path('see_marks/<student_id>/', see_marks, name="see_marks"),
 ]
 
 
