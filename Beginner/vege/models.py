@@ -49,7 +49,7 @@ class Subject(models.Model):
     def __str__(self) -> str:
         return self.subject_name
 
-class SubjectMarks(models.Model):
+class SubjectMarks(models.Model):           
     student = models.ForeignKey(Student, related_name="studentmarks", on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, related_name="subjectmarks", on_delete=models.CASCADE)
     marks = models.IntegerField(default=0)
@@ -59,3 +59,14 @@ class SubjectMarks(models.Model):
 
     class Meta:
         unique_together = ['student', 'subject']    
+
+
+class ReportCard(models.Model):
+    student = models.ForeignKey(Student, related_name="studentreportcard", on_delete=models.CASCADE)
+    student_rank = models.IntegerField(default=0)
+
+    date_created = models.DateTimeField(auto_created = True, auto_now_add=True)
+
+    class Meta:
+        unique_together = ['student', 'student_rank']
+

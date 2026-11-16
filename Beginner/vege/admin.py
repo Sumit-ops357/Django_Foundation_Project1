@@ -13,4 +13,11 @@ class SubjectMarksAdmin(admin.ModelAdmin):
     list_display = ['student', 'subject', 'marks']
 
 
-admin.site.register(SubjectMarks, SubjectMarksAdmin)    
+admin.site.register(SubjectMarks, SubjectMarksAdmin)   
+
+class ReportCardAdmin(admin.ModelAdmin):
+    list_display = ['student', 'student_rank', 'date_created']
+    ordering = ['student_rank']
+
+
+admin.site.register(ReportCard, ReportCardAdmin)
